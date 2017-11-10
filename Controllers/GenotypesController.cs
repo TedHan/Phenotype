@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Phenotype.Models;
+using Newtonsoft.Json.Linq;
 
 namespace Phenotype.Controllers
 {
@@ -67,5 +68,30 @@ namespace Phenotype.Controllers
                 Data = genotype
             });
         }
+
+        // [HttpPost("batch")]
+        // public async Task<IActionResult> CreateBatch([FromBody] JObject json)
+        // {
+        //     var name = json.Value<string>("name");
+        //     List<JToken> values = json["values"].ToList();
+        //     List<Genotype> listToReturn = new List<Genotype>();
+        //     foreach (var item in values)
+        //     {
+        //         var genotype = new Genotype
+        //         {
+        //             Id = Guid.NewGuid(),
+        //             Name = name,
+        //             Value = item.ToString()
+        //         };
+        //         _dataContext.Add(genotype);
+        //         listToReturn.Add(genotype);
+        //     }
+        //     await _dataContext.SaveChangesAsync();
+        //     return Ok(new RequestResult
+        //     {
+        //         Stat = RequestStatus.Success,
+        //         Data = listToReturn
+        //     });
+        // }
     }
 }
