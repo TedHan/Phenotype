@@ -69,6 +69,17 @@ namespace Phenotype.Controllers
             });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var list = await _dataContext.Genotypes.GroupBy(g => g.Name).ToListAsync();
+            return Ok(new RequestResult
+            {
+                Stat = RequestStatus.Success,
+                Data = list
+            });
+        }
+
         // [HttpPost("batch")]
         // public async Task<IActionResult> CreateBatch([FromBody] JObject json)
         // {
