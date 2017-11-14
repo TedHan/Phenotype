@@ -19,26 +19,30 @@ namespace Phenotype.Controllers
         }
 
         [HttpPost("batch")]
-        public async Task<IActionResult> CreateBatch([FromBody] JObject json)
+        public async Task<IActionResult> CreateBatch([FromBody] JArray jarr)
         {
-            var father = _dataContext.Genotypes.FirstOrDefault(g => g.Value == json.Value<string>("father"));
-            var mother = _dataContext.Genotypes.FirstOrDefault(g => g.Value == json.Value<string>("mother"));
-
-            List<JToken> values = json["values"].ToList();
             List<PhenotypeResult> listToReturn = new List<PhenotypeResult>();
 
-            foreach (var item in values)
+            foreach (var json in jarr)
             {
-                var tmp = new PhenotypeResult
+                var father = _dataContext.Genotypes.FirstOrDefault(g => g.Value == json.Value<string>("father"));
+                var mother = _dataContext.Genotypes.FirstOrDefault(g => g.Value == json.Value<string>("mother"));
+
+                List<JToken> values = json["values"].ToList();
+
+                foreach (var item in values)
                 {
-                    Id = Guid.NewGuid(),
-                    Father = father,
-                    Mother = mother,
-                    Probability = item.Value<Double>("prob"),
-                    Result = item.Value<string>("result")
-                };
-                _dataContext.PhenotypeResults.Add(tmp);
-                listToReturn.Add(tmp);
+                    var tmp = new PhenotypeResult
+                    {
+                        Id = Guid.NewGuid(),
+                        Father = father,
+                        Mother = mother,
+                        Probability = item.Value<Double>("prob"),
+                        Result = item.Value<string>("result")
+                    };
+                    _dataContext.PhenotypeResults.Add(tmp);
+                    listToReturn.Add(tmp);
+                }
             }
 
             await _dataContext.SaveChangesAsync();
