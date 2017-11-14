@@ -55,10 +55,25 @@ namespace Phenotype.Controllers
                 }
             }
 
+            var listToReturn = resultList
+                .Select(i =>
+                    new ResultItem
+                    {
+                        Prob = i.Prob,
+                        Description = SpecialRulesHelper.Transform(i.Description)
+                    })
+                .GroupBy(i => i.Description)
+                .Select(i =>
+                    new ResultItem
+                    {
+                        Prob = i.Sum(t => t.Prob),
+                        Description = i.First().Description
+                    })
+                .ToList();
+
             string str = string.Empty;
-            foreach (var item in resultList)
+            foreach (var item in listToReturn)
             {
-                item.Description = SpecialRulesHelper.Transform(item.Description);
                 str += (item.Prob * 100).ToString() + "% " + item.Description + "; ";
             }
 
